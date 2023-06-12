@@ -52,7 +52,6 @@ ENV ELECTRUM_DIR /git/electrum
 # Add user electrum
 # RUN adduser --home $ELECTRUM_HOME --uid 2000 --disabled-password --disabled-login $ELECTRUM_USER
 
-ARG GHE_ACCESS_TOKEN
 WORKDIR /git
 ADD pyep11 /git/pyep11
 ADD electrum/${ELECTRUM_TAG}.patch .
@@ -115,10 +114,7 @@ ADD laravel-electrum/api.php laravel-electrum/web.php /var/www/html/electrum/rou
 
 ARG LARAVEL_ELECTRUM_BRANCH="local-e" 
 
-# Use ACCESS_TOKEN to access github with credential when necessary
-ARG ACCESS_TOKEN
 RUN sed --in-place "s|dev-local|dev-${LARAVEL_ELECTRUM_BRANCH}|" composer.json && \
-    composer config --global github-oauth.github.com ${ACCESS_TOKEN} && \
     composer -vv install && \
     php artisan ui vue --auth && \
     npm install && \
